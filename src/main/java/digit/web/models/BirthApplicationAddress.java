@@ -16,7 +16,7 @@ import lombok.Data;
 import lombok.Builder;
 
 /**
- * BirthApplicationAddress
+ * BirthApplicationAddress represents the address details related to a birth registration application.
  */
 @Validated
 @jakarta.annotation.Generated(value = "org.egov.codegen.SpringBootCodegen", date = "2024-05-03T11:52:56.302336279+05:30[Asia/Kolkata]")
@@ -24,25 +24,35 @@ import lombok.Builder;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class BirthApplicationAddress   {
-    @JsonProperty("id")
+public class BirthApplicationAddress {
 
+    /**
+     * Unique identifier for the address.
+     */
+    @JsonProperty("id")
     @Valid
     private String id = null;
 
+    /**
+     * Tenant ID where the birth registration is taking place.
+     * It must be between 2 and 64 characters.
+     */
     @JsonProperty("tenantId")
     @NotNull
+    @Size(min = 2, max = 64)
+    private String tenantId = null;
 
-    @Size(min=2,max=64)         private String tenantId = null;
-
+    /**
+     * The application number associated with the birth registration.
+     */
     @JsonProperty("applicationNumber")
-
     private String applicationNumber = null;
 
+    /**
+     * The address of the applicant.
+     */
     @JsonProperty("applicantAddress")
-
     @Valid
     private Address applicantAddress = null;
-
 
 }
