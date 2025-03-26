@@ -1,6 +1,6 @@
 package digit.web.models;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.egov.common.contract.request.RequestInfo;
 import org.springframework.validation.annotation.Validated;
 import jakarta.validation.Valid;
@@ -11,7 +11,7 @@ import lombok.Data;
 import lombok.Builder;
 
 /**
- * BirthApplicationSearchCriteria
+ * BirthApplicationSearchRequest encapsulates the request for searching birth registration applications.
  */
 @Validated
 @Data
@@ -20,12 +20,17 @@ import lombok.Builder;
 @Builder
 public class BirthApplicationSearchRequest {
 
+    /**
+     * RequestInfo contains metadata about the incoming request (e.g., request ID, user info).
+     */
     @JsonProperty("RequestInfo")
     @Valid
     private RequestInfo requestInfo = null;
 
+    /**
+     * BirthApplicationSearchCriteria contains the criteria for searching birth registration applications.
+     */
     @JsonProperty("BirthApplicationSearchCriteria")
     @Valid
     private BirthApplicationSearchCriteria birthApplicationSearchCriteria = null;
-
 }
