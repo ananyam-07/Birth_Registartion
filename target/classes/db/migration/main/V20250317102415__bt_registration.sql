@@ -1,3 +1,5 @@
+-- Table to store birth registration details
+
 CREATE TABLE eg_bt_registration(
   id character varying(64),
   tenantId character varying(64),
@@ -16,6 +18,9 @@ CREATE TABLE eg_bt_registration(
   lastModifiedTime bigint,
  CONSTRAINT uk_eg_bt_registration UNIQUE (id)
 );
+
+-- Table to store address details associated with a birth registration
+
 CREATE TABLE eg_bt_address(
    id character varying(64),
    tenantId character varying(64),
