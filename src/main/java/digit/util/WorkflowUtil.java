@@ -28,22 +28,19 @@ public class WorkflowUtil {
     @Autowired
     private Configuration configs;
 
-
-
     /**
-    * Searches the BussinessService corresponding to the businessServiceCode
-    * Returns applicable BussinessService for the given parameters
-    * @param requestInfo
-    * @param tenantId
-    * @param businessServiceCode
-    * @return
-    */
+     * Fetches the BusinessService object for the given businessServiceCode.
+     * 
+     * @param requestInfo The request details
+     * @param tenantId The tenant ID
+     * @param businessServiceCode The code for the business service
+     * @return The corresponding BusinessService
+     */
     public BusinessService getBusinessService(RequestInfo requestInfo, String tenantId, String businessServiceCode) {
-
         StringBuilder url = getSearchURLWithParams(tenantId, businessServiceCode);
         RequestInfoWrapper requestInfoWrapper = RequestInfoWrapper.builder().requestInfo(requestInfo).build();
         Object result = repository.fetchResult(url, requestInfoWrapper);
-        BusinessServiceResponse response = null;
+        BusinessServiceResponse response;
         try {
             response = mapper.convertValue(result, BusinessServiceResponse.class);
         } catch (IllegalArgumentException e) {
@@ -57,16 +54,16 @@ public class WorkflowUtil {
     }
 
     /**
-    * Calls the workflow service with the given action and updates the status
-    * Returns the updated status of the application
-    * @param requestInfo
-    * @param tenantId
-    * @param businessId
-    * @param businessServiceCode
-    * @param workflow
-    * @param wfModuleName
-    * @return
-    */
+     * Updates the workflow status for the given businessId and returns the updated status.
+     * 
+     * @param requestInfo The request details
+     * @param tenantId The tenant ID
+     * @param businessId The business ID
+     * @param businessServiceCode The business service code
+     * @param workflow The workflow details
+     * @param wfModuleName The workflow module name
+     * @return The updated application status
+     */
     public String updateWorkflowStatus(RequestInfo requestInfo, String tenantId,
         String businessId, String businessServiceCode, Workflow workflow, String wfModuleName) {
         ProcessInstance processInstance = getProcessInstanceForWorkflow(requestInfo, tenantId, businessId,
@@ -78,11 +75,12 @@ public class WorkflowUtil {
     }
 
     /**
-    * Creates url for search based on given tenantId and businessServices
-    * @param tenantId
-    * @param businessService
-    * @return
-    */
+     * Constructs the URL for business service search with the given parameters.
+     * 
+     * @param tenantId The tenant ID
+     * @param businessService The business service code
+     * @return The constructed URL
+     */
     private StringBuilder getSearchURLWithParams(String tenantId, String businessService) {
         StringBuilder url = new StringBuilder(configs.getWfHost());
         url.append(configs.getWfBusinessServiceSearchPath());
@@ -94,15 +92,16 @@ public class WorkflowUtil {
     }
 
     /**
-    * Enriches ProcessInstance Object for Workflow
-    * @param requestInfo
-    * @param tenantId
-    * @param businessId
-    * @param businessServiceCode
-    * @param workflow
-    * @param wfModuleName
-    * @return
-    */
+     * Enriches the ProcessInstance object with necessary details from the workflow.
+     * 
+     * @param requestInfo The request details
+     * @param tenantId The tenant ID
+     * @param businessId The business ID
+     * @param businessServiceCode The business service code
+     * @param workflow The workflow details
+     * @param wfModuleName The workflow module name
+     * @return The enriched ProcessInstance
+     */
     private ProcessInstance getProcessInstanceForWorkflow(RequestInfo requestInfo, String tenantId,
         String businessId, String businessServiceCode, Workflow workflow, String wfModuleName) {
 
@@ -114,15 +113,13 @@ public class WorkflowUtil {
         processInstance.setBusinessService(getBusinessService(requestInfo, tenantId, businessServiceCode).getBusinessService());
         processInstance.setComment(workflow.getComments());
 
-        if(!CollectionUtils.isEmpty(workflow.getAssignes())) {
+        if (!CollectionUtils.isEmpty(workflow.getAssignes())) {
             List<User> users = new ArrayList<>();
-
             workflow.getAssignes().forEach(uuid -> {
                 User user = new User();
                 user.setUuid(uuid);
                 users.add(user);
             });
-
             processInstance.setAssignes(users);
         }
 
@@ -130,10 +127,11 @@ public class WorkflowUtil {
     }
 
     /**
-    * Gets the workflow corresponding to the processInstance
-    * @param processInstances
-    * @return
-    */
+     * Maps process instances to workflows, associating each business ID with its corresponding workflow.
+     * 
+     * @param processInstances The list of process instances
+     * @return A map of business IDs to workflows
+     */
     public Map<String, Workflow> getWorkflow(List<ProcessInstance> processInstances) {
 
         Map<String, Workflow> businessIdToWorkflow = new HashMap<>();
@@ -141,7 +139,7 @@ public class WorkflowUtil {
         processInstances.forEach(processInstance -> {
             List<String> userIds = null;
 
-            if(!CollectionUtils.isEmpty(processInstance.getAssignes())){
+            if (!CollectionUtils.isEmpty(processInstance.getAssignes())) {
                 userIds = processInstance.getAssignes().stream().map(User::getUuid).collect(Collectors.toList());
             }
 
@@ -158,10 +156,11 @@ public class WorkflowUtil {
     }
 
     /**
-    * Method to take the ProcessInstanceRequest as parameter and set resultant status
-    * @param workflowReq
-    * @return
-    */
+     * Calls the workflow service and retrieves the updated state.
+     * 
+     * @param workflowReq The workflow request object
+     * @return The updated state
+     */
     private State callWorkFlow(ProcessInstanceRequest workflowReq) {
         ProcessInstanceResponse response = null;
         StringBuilder url = new StringBuilder(configs.getWfHost().concat(configs.getWfTransitionPath()));
