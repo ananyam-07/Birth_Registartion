@@ -16,7 +16,7 @@ import lombok.Builder;
 
 
 /**
- * BirthApplicationSearchCriteria
+ * BirthApplicationSearchCriteria holds the search criteria for searching birth registration applications.
  */
 @Validated
 @jakarta.annotation.Generated(value = "org.egov.codegen.SpringBootCodegen", date = "2025-03-17T10:01:06.211691200+05:30[Asia/Calcutta]")
@@ -24,31 +24,47 @@ import lombok.Builder;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class BirthApplicationSearchCriteria   {
-        @JsonProperty("tenantId")
-          @NotNull
+public class BirthApplicationSearchCriteria {
 
-                private String tenantId = null;
+    /**
+     * Tenant ID for which the birth registration search is to be performed.
+     */
+    @JsonProperty("tenantId")
+    @NotNull
+    private String tenantId = null;
 
-        @JsonProperty("status")
+    /**
+     * Status of the birth registration application (e.g., pending, approved).
+     */
+    @JsonProperty("status")
+    private String status = null;
 
-                private String status = null;
+    /**
+     * List of application IDs to search for.
+     * Maximum of 50 IDs allowed.
+     */
+    @JsonProperty("ids")
+    @Size(max = 50)
+    private List<String> ids = null;
 
-        @JsonProperty("ids")
+    /**
+     * Application number for searching the birth registration application.
+     * Must be between 2 and 64 characters.
+     */
+    @JsonProperty("applicationNumber")
+    @Size(min = 2, max = 64)
+    private String applicationNumber = null;
 
-        @Size(max=50)         private List<String> ids = null;
-
-        @JsonProperty("applicationNumber")
-
-        @Size(min=2,max=64)         private String applicationNumber = null;
-
-
-        public BirthApplicationSearchCriteria addIdsItem(String idsItem) {
-            if (this.ids == null) {
+    /**
+     * Adds an ID to the list of IDs for search criteria.
+     * @param idsItem The ID to be added.
+     * @return The updated BirthApplicationSearchCriteria object.
+     */
+    public BirthApplicationSearchCriteria addIdsItem(String idsItem) {
+        if (this.ids == null) {
             this.ids = new ArrayList<>();
-            }
+        }
         this.ids.add(idsItem);
         return this;
-        }
-
+    }
 }
