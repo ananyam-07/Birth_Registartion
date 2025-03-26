@@ -13,85 +13,119 @@ import lombok.Builder;
 import org.egov.common.contract.models.AuditDetails;
 import org.egov.common.contract.request.User;
 
-
 /**
- *  Object holds the basic data for a Birth Registration Application
+ * BirthRegistrationApplication holds the essential details for a birth registration application.
  */
-@Schema(description = "A Object holds the basic data for a Birth Registration Application")
+@Schema(description = "An object that holds the basic data for a Birth Registration Application")
 @Validated
 @jakarta.annotation.Generated(value = "org.egov.codegen.SpringBootCodegen", date = "2025-03-17T10:01:06.211691200+05:30[Asia/Calcutta]")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class BirthRegistrationApplication   {
-        @JsonProperty("id")
+public class BirthRegistrationApplication {
 
-        @Size(min=2,max=64)         private String id = null;
+    /**
+     * Unique identifier for the birth registration application.
+     */
+    @JsonProperty("id")
+    @Size(min = 2, max = 64)
+    private String id = null;
 
-        @JsonProperty("tenantId")
-          @NotNull
+    /**
+     * Tenant ID indicating the jurisdiction for the registration.
+     */
+    @JsonProperty("tenantId")
+    @NotNull
+    @Size(min = 2, max = 128)
+    private String tenantId = null;
 
-        @Size(min=2,max=128)         private String tenantId = null;
+    /**
+     * Unique application number for the birth registration.
+     */
+    @JsonProperty("applicationNumber")
+    @Size(min = 2, max = 128)
+    private String applicationNumber = null;
 
-        @JsonProperty("applicationNumber")
+    /**
+     * First name of the baby being registered.
+     */
+    @JsonProperty("babyFirstName")
+    @NotNull
+    @Size(min = 2, max = 128)
+    private String babyFirstName = null;
 
-        @Size(min=2,max=128)         private String applicationNumber = null;
+    /**
+     * Last name of the baby being registered (optional).
+     */
+    @JsonProperty("babyLastName")
+    @Size(min = 2, max = 128)
+    private String babyLastName = null;
 
-        @JsonProperty("babyFirstName")
-          @NotNull
+    /**
+     * Details of the father of the baby (user object).
+     */
+    @JsonProperty("father")
+    @NotNull
+    @Valid
+    private User father = null;
 
-        @Size(min=2,max=128)         private String babyFirstName = null;
+    /**
+     * Details of the mother of the baby (user object).
+     */
+    @JsonProperty("mother")
+    @NotNull
+    @Valid
+    private User mother = null;
 
-        @JsonProperty("babyLastName")
+    /**
+     * Name of the doctor who attended the birth.
+     */
+    @JsonProperty("doctorName")
+    @NotNull
+    @Size(min = 2, max = 128)
+    private String doctorName = null;
 
-        @Size(min=2,max=128)         private String babyLastName = null;
+    /**
+     * Name of the hospital where the birth occurred.
+     */
+    @JsonProperty("hospitalName")
+    @NotNull
+    @Size(min = 2, max = 128)
+    private String hospitalName = null;
 
-        @JsonProperty("father")
-          @NotNull
+    /**
+     * Place where the baby was born.
+     */
+    @JsonProperty("placeOfBirth")
+    @NotNull
+    @Size(min = 2, max = 128)
+    private String placeOfBirth = null;
 
-          @Valid
-                private User father = null;
+    /**
+     * Time of birth (optional).
+     */
+    @JsonProperty("timeOfBirth")
+    private Integer timeOfBirth = null;
 
-        @JsonProperty("mother")
-          @NotNull
+    /**
+     * Address associated with the birth registration.
+     */
+    @JsonProperty("address")
+    @Valid
+    private BirthApplicationAddress address = null;
 
-          @Valid
-                private User mother = null;
+    /**
+     * Workflow associated with the birth registration.
+     */
+    @JsonProperty("workflow")
+    @Valid
+    private Workflow workflow = null;
 
-        @JsonProperty("doctorName")
-          @NotNull
-
-        @Size(min=2,max=128)         private String doctorName = null;
-
-        @JsonProperty("hospitalName")
-          @NotNull
-
-        @Size(min=2,max=128)         private String hospitalName = null;
-
-        @JsonProperty("placeOfBirth")
-          @NotNull
-
-        @Size(min=2,max=128)         private String placeOfBirth = null;
-
-        @JsonProperty("timeOfBirth")
-
-                private Integer timeOfBirth = null;
-
-        @JsonProperty("address")
-
-          @Valid
-                private BirthApplicationAddress address = null;
-
-        @JsonProperty("workflow")
-
-          @Valid
-                private Workflow workflow = null;
-
-        @JsonProperty("auditDetails")
-
-          @Valid
-                private AuditDetails auditDetails = null;
-
-
+    /**
+     * Audit details for the birth registration application.
+     */
+    @JsonProperty("auditDetails")
+    @Valid
+    private AuditDetails auditDetails = null;
 }
