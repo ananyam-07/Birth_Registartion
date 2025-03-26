@@ -23,29 +23,45 @@ import static digit.config.ServiceConstants.*;
 public class IdgenUtil {
 
     @Autowired
-    private ObjectMapper mapper;
+    private ObjectMapper mapper;  // For JSON parsing
 
     @Autowired
-    private ServiceRequestRepository restRepo;
+    private ServiceRequestRepository restRepo;  // Repository to fetch data from external service
 
     @Autowired
-    private Configuration configs;
+    private Configuration configs;  // Configuration for external ID generation service
 
-    public List<String> getIdList(RequestInfo requestInfo, String tenantId, String idName, String idformat, Integer count) {
+    /**
+     * Fetches a list of IDs from the ID generation service.
+     * 
+     * @param requestInfo Request info for the ID generation service
+     * @param tenantId Tenant ID
+     * @param idName Name of the ID to generate
+     * @param idFormat Format of the ID
+     * @param count Number of IDs to generate
+     * @return List of generated IDs
+     */
+    public List<String> getIdList(RequestInfo requestInfo, String tenantId, String idName, String idFormat, Integer count) {
+        // Prepare a list of ID requests
         List<IdRequest> reqList = new ArrayList<>();
         for (int i = 0; i < count; i++) {
-            reqList.add(IdRequest.builder().idName(idName).format(idformat).tenantId(tenantId).build());
+            reqList.add(IdRequest.builder().idName(idName).format(idFormat).tenantId(tenantId).build());
         }
 
+        // Create ID generation request
         IdGenerationRequest request = IdGenerationRequest.builder().idRequests(reqList).requestInfo(requestInfo).build();
         StringBuilder uri = new StringBuilder(configs.getIdGenHost()).append(configs.getIdGenPath());
+        
+        // Fetch ID generation response
         IdGenerationResponse response = mapper.convertValue(restRepo.fetchResult(uri, request), IdGenerationResponse.class);
 
         List<IdResponse> idResponses = response.getIdResponses();
 
+        // Throw error if no IDs are returned
         if (CollectionUtils.isEmpty(idResponses))
             throw new CustomException(IDGEN_ERROR, NO_IDS_FOUND_ERROR);
 
+        // Return the list of generated IDs
         return idResponses.stream().map(IdResponse::getId).collect(Collectors.toList());
     }
 }
